@@ -19,46 +19,27 @@ export default function EnhanceableTextarea({
   const [previousValue, setPreviousValue] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const { complete, isLoading, completion, error } = useCompletion({
+  const { complete, isLoading } = useCompletion({
     api: '/api/enhance',
-    streamProtocol: 'text', // Important: match the toTextStreamResponse() from the API
-    onResponse: (response) => {
-      console.log('[useCompletion] onResponse:', response.status, response.statusText);
-    },
+    streamProtocol: 'text',
     onFinish: (_prompt: string, completion: string) => {
-      console.log('[useCompletion] onFinish - prompt:', _prompt);
-      console.log('[useCompletion] onFinish - completion:', completion);
       setValue(completion);
-    },
-    onError: (err) => {
-      console.error('[useCompletion] onError:', err);
     },
   });
 
-  // Log completion changes
-  console.log('[render] completion:', completion, '| isLoading:', isLoading, '| error:', error);
-
   const handleEnhance = async () => {
-    console.log('[handleEnhance] Starting enhancement...');
-    console.log('[handleEnhance] Current value:', value);
-
-    if (!value.trim() || isLoading) {
-      console.log('[handleEnhance] Aborting - empty or already loading');
-      return;
-    }
+    if (!value.trim() || isLoading) return;
 
     // Store the current value for undo
     setPreviousValue(value);
 
     // Trigger the enhancement
-    console.log('[handleEnhance] Calling complete() with body:', { text: value, context });
-    const result = await complete(value, {
+    await complete(value, {
       body: {
         text: value,
         context: context,
       },
     });
-    console.log('[handleEnhance] complete() returned:', result);
   };
 
   const handleUndo = () => {
@@ -70,7 +51,7 @@ export default function EnhanceableTextarea({
 
   return (
     <div className="w-full">
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
         {label}
       </label>
 
@@ -84,10 +65,11 @@ export default function EnhanceableTextarea({
           disabled={isLoading}
           className={`
             w-full min-h-[150px] p-4 pr-12
-            border border-gray-300 rounded-lg
+            border border-gray-300 dark:border-gray-600 rounded-lg
+            bg-white dark:bg-gray-800
             focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-            disabled:bg-gray-50 disabled:cursor-not-allowed
-            resize-y text-gray-900 placeholder-gray-400
+            disabled:bg-gray-50 dark:disabled:bg-gray-900 disabled:cursor-not-allowed
+            resize-y text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500
             ${isLoading ? 'shimmer-bg' : ''}
           `}
         />
@@ -103,7 +85,7 @@ export default function EnhanceableTextarea({
             transition-all duration-200
             ${value.trim() && !isLoading
               ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white hover:from-purple-600 hover:to-blue-600 shadow-md hover:shadow-lg cursor-pointer'
-              : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
             }
             ${isLoading ? 'animate-pulse' : ''}
           `}
@@ -122,8 +104,8 @@ export default function EnhanceableTextarea({
             className="
               absolute top-3 right-14
               p-2 rounded-lg
-              bg-gray-100 text-gray-600
-              hover:bg-gray-200 hover:text-gray-800
+              bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400
+              hover:bg-gray-200 dark:hover:bg-gray-600 hover:text-gray-800 dark:hover:text-gray-200
               transition-all duration-200
               cursor-pointer
             "
@@ -135,17 +117,17 @@ export default function EnhanceableTextarea({
 
       {/* Loading indicator */}
       {isLoading && (
-        <p className="mt-2 text-sm text-purple-600 flex items-center gap-2">
-          <span className="inline-block w-2 h-2 bg-purple-600 rounded-full animate-bounce" />
+        <p className="mt-2 text-sm text-purple-600 dark:text-purple-400 flex items-center gap-2">
+          <span className="inline-block w-2 h-2 bg-purple-600 dark:bg-purple-400 rounded-full animate-bounce" />
           Enhancing your text with AI...
         </p>
       )}
 
       {/* Helper text */}
-      <p className="mt-2 text-xs text-gray-500">
+      <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
         Click the <Sparkles size={12} className="inline text-purple-500" /> button to enhance your text with AI
         {previousValue !== null && (
-          <span> • Click <Undo2 size={12} className="inline text-gray-500" /> to restore original</span>
+          <span> • Click <Undo2 size={12} className="inline text-gray-500 dark:text-gray-400" /> to restore original</span>
         )}
       </p>
     </div>
