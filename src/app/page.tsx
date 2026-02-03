@@ -12,6 +12,7 @@ import {
   Layers,
   BarChart3,
   Scale,
+  PanelRight,
 } from 'lucide-react';
 
 interface DemoCard {
@@ -92,6 +93,15 @@ const demos: DemoCard[] = [
     icon: Scale,
     gradient: 'from-indigo-500 to-purple-500',
     tags: ['CopilotKit', 'Generative UI', 'Decisions'],
+    isNew: true,
+  },
+  {
+    title: 'Sliding Chat Panel',
+    description: 'Click the chat icon to open a slide-out side panel. Business document form with AI assistance.',
+    href: '/ai-sidepanel',
+    icon: PanelRight,
+    gradient: 'from-fuchsia-500 to-pink-500',
+    tags: ['CopilotKit', 'Side Panel', 'Forms'],
     isNew: true,
   },
 ];
