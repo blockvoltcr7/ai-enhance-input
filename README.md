@@ -56,9 +56,8 @@ Click the floating chat icon to open a slide-out side panel. Business document f
 ### Prerequisites
 
 - Node.js 18+
-- npm or yarn
+- pnpm, npm, or yarn
 - OpenAI API key
-- CopilotKit Cloud API key (optional, for CopilotKit demos)
 
 ### Environment Variables
 
@@ -66,7 +65,6 @@ Create a `.env.local` file:
 
 ```bash
 OPENAI_API_KEY=your_openai_api_key_here
-NEXT_PUBLIC_COPILOT_CLOUD_API_KEY=your_copilotkit_cloud_api_key_here
 ```
 
 ### Installation
